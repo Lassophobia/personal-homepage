@@ -2,7 +2,7 @@
 import { FadeIn } from '../components/FadeIn'
 import { Magnet } from '../components/Magnet'
 
-const portrait = '/astronaut-hero.png'
+const portrait = `${import.meta.env.BASE_URL}astronaut-hero.png`
 
 export function HeroSection() {
   return (

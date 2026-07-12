@@ -10,7 +10,7 @@ const projects = [
     name: '天衍万象',
     url: 'https://github.com/Lassophobia/ai-interactive-novel',
     description: '一款基于 DeepSeek API 的本地 AI 互动小说创作工具。用户可以设定世界观、角色和故事风格，再通过选项或自定义行动推动剧情发展。',
-    images: ['/projects/tianyan/1.png', '/projects/tianyan/3.png', '/projects/tianyan/2.png'],
+    images: ['projects/tianyan/1.png', 'projects/tianyan/3.png', 'projects/tianyan/2.png'].map(path => `${import.meta.env.BASE_URL}${path}`),
   },
   {
     number: '02',
@@ -18,7 +18,7 @@ const projects = [
     name: '墨伴',
     url: 'https://github.com/Lassophobia/moban-ai-reader',
     description: '一款本地优先的桌面阅读器，整合书源搜索、沉浸阅读、正文净化、智能换源、听书和 AI 陪读功能。',
-    images: ['/projects/moban/1.png', '/projects/moban/3.png', '/projects/moban/home.png'],
+    images: ['projects/moban/1.png', 'projects/moban/3.png', 'projects/moban/home.png'].map(path => `${import.meta.env.BASE_URL}${path}`),
   },
   {
     number: '03',
@@ -26,7 +26,7 @@ const projects = [
     name: '爱优腾',
     url: 'https://github.com/Lassophobia/aiyouteng-desktop',
     description: '一款使用 Electron 开发的桌面视频聚合播放工具，提供影视点播、电视直播和平台直播功能，主要用于前端开发与播放协议研究。',
-    images: ['/projects/aiyouteng/1.png', '/projects/aiyouteng/3.png', '/projects/aiyouteng/2.png'],
+    images: ['projects/aiyouteng/1.png', 'projects/aiyouteng/3.png', 'projects/aiyouteng/2.png'].map(path => `${import.meta.env.BASE_URL}${path}`),
   },
 ]
 
