@@ -1,8 +1,71 @@
-﻿import { ContactButton } from '../components/Buttons'
+import { useEffect, useRef } from 'react'
+import { ContactButton } from '../components/Buttons'
 import { FadeIn } from '../components/FadeIn'
-import { Magnet } from '../components/Magnet'
 
-const portrait = `${import.meta.env.BASE_URL}astronaut-hero.png`
+const astronautVideo = `${import.meta.env.BASE_URL}astronaut-head-rotation-transparent-lossless.webm`
+
+function MouseTrackedAstronaut() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const durationRef = useRef(0)
+  const targetTimeRef = useRef(0)
+  const seekingRef = useRef(false)
+  const frameRef = useRef<number | null>(null)
+
+  const seekToTarget = () => {
+    const video = videoRef.current
+    if (!video || !durationRef.current || seekingRef.current) return
+
+    if (Math.abs(video.currentTime - targetTimeRef.current) < .003) return
+    seekingRef.current = true
+    video.currentTime = targetTimeRef.current
+  }
+
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      const progress = Math.min(Math.max(event.clientX / window.innerWidth, 0), 1)
+      targetTimeRef.current = progress * Math.max(durationRef.current - .001, 0)
+
+      if (frameRef.current === null) {
+        frameRef.current = window.requestAnimationFrame(() => {
+          frameRef.current = null
+          seekToTarget()
+        })
+      }
+    }
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current)
+    }
+  }, [])
+
+  return (
+    <video
+      ref={videoRef}
+      src={astronautVideo}
+      className="w-full select-none object-contain [filter:drop-shadow(0_0_10px_rgba(170,128,255,.24))_drop-shadow(0_0_26px_rgba(118,33,176,.16))]"
+      aria-label="??????????"
+      muted
+      playsInline
+      preload="auto"
+      draggable={false}
+      onLoadedMetadata={(event) => {
+        const video = event.currentTarget
+        durationRef.current = video.duration
+        targetTimeRef.current = video.duration / 2
+        video.pause()
+        seekToTarget()
+      }}
+      onSeeked={(event) => {
+        seekingRef.current = false
+        if (Math.abs(event.currentTarget.currentTime - targetTimeRef.current) >= .003) {
+          window.requestAnimationFrame(seekToTarget)
+        }
+      }}
+    />
+  )
+}
 
 export function HeroSection() {
   return (
@@ -15,9 +78,7 @@ export function HeroSection() {
 
       <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-[280px] -translate-x-1/2 -translate-y-1/2 sm:bottom-0 sm:top-auto sm:w-[360px] sm:translate-y-0 md:w-[440px] lg:w-[520px]">
         <FadeIn delay={.6} y={30}>
-          <Magnet padding={150} strength={3} className="pointer-events-auto">
-            <img src={portrait} alt="罔生的人物肖像" className="w-full select-none object-contain [filter:drop-shadow(0_0_10px_rgba(170,128,255,.24))_drop-shadow(0_0_26px_rgba(118,33,176,.16))]" draggable={false} />
-          </Magnet>
+          <MouseTrackedAstronaut />
         </FadeIn>
       </div>
 
@@ -35,5 +96,3 @@ export function HeroSection() {
     </section>
   )
 }
-
-
